@@ -3,19 +3,20 @@
  import android.os.Bundle
                         import androidx.activity.ComponentActivity
                         import androidx.activity.compose.setContent
-                        import androidx.compose.animation.animateContentSize
+ import androidx.activity.viewModels
+ import androidx.compose.animation.animateContentSize
                         import androidx.compose.animation.core.Spring
                         import androidx.compose.animation.core.animateDpAsState
                         import androidx.compose.animation.core.spring
-                        import androidx.compose.foundation.background
-                        import androidx.compose.foundation.layout.*
-                        import androidx.compose.foundation.rememberScrollState
-                        import androidx.compose.foundation.shape.RoundedCornerShape
-                        import androidx.compose.foundation.verticalScroll
-                        import androidx.compose.material.*
+ import androidx.compose.foundation.*
+ import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.material.*
                         import androidx.compose.material.icons.Icons
  import androidx.compose.material.icons.filled.ExpandLess
  import androidx.compose.material.icons.filled.ExpandMore
+ import androidx.compose.material.icons.filled.Menu
+ import androidx.compose.material.icons.filled.Search
  import androidx.compose.runtime.Composable
                         import androidx.compose.runtime.mutableStateOf
                         import androidx.compose.runtime.setValue
@@ -24,25 +25,40 @@
                         import androidx.compose.runtime.saveable.rememberSaveable
                         import androidx.compose.ui.Alignment
                         import androidx.compose.ui.Modifier
-                        import androidx.compose.ui.graphics.Color
-                        import androidx.compose.ui.layout.VerticalAlignmentLine
-                        import androidx.compose.ui.res.stringResource
+ import androidx.compose.ui.draw.clip
+ import androidx.compose.ui.graphics.Color
+ import androidx.compose.ui.graphics.ColorFilter
+ import androidx.compose.ui.layout.VerticalAlignmentLine
+ import androidx.compose.ui.res.painterResource
+ import androidx.compose.ui.res.stringResource
                         import androidx.compose.ui.text.font.Font
                         import androidx.compose.ui.text.font.FontFamily
                         import androidx.compose.ui.text.font.FontWeight
                         import androidx.compose.ui.unit.dp
                         import androidx.compose.ui.unit.sp
+ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
  import com.example.advancedaffirmation.ui.theme.AdvancedAffirmationTheme
  import com.example.advancedaffirmation.ui.theme.beautyPink
  import com.example.advancedaffirmation.ui.theme.darkBlue
 
 
  class MainActivity : ComponentActivity() {
+
+     private val viewModel:MainViewModel by viewModels()
+
                     override fun onCreate(savedInstanceState: Bundle?) {
                         super.onCreate(savedInstanceState)
+                        installSplashScreen().apply {
+                            setKeepVisibleCondition()
+                            {
+                                viewModel.isLoading.value
+                            }
+
+                        }
                         setContent {
                             AdvancedAffirmationTheme {
-                                top()
+                                top(onSearchClicked = {}
+                                )
                             }
                         }
                     }
@@ -93,21 +109,60 @@
                     }
 
                 }
-                @Composable
-                fun top () {
-                    Scaffold(
-                        topBar = {
-                            TopAppBar(
-                                title = {
-                                    Text("Affirmation")
-                                },
-                                modifier = Modifier.background(darkBlue)
 
-                            )
+ @Composable
+ fun top (onSearchClicked: () -> Unit) {
+     Scaffold(
+         topBar = { TopAppBar(
 
-                        }
-                    )
-                    {
+             title = {
+
+                 Box(modifier = Modifier.fillMaxWidth(), Alignment.Center)
+                 {
+                     Image(
+                         painterResource(id = R.drawable.pendo6), contentDescription = "logo",
+                         modifier = Modifier.size(100.dp)
+                             .clickable{})
+
+                     }
+
+             },
+
+             modifier= Modifier //.padding(horizontal= 16.dp) vertical= 4.dp)
+                     // .clip(shape = RoundedCornerShape(30.dp))
+                      .background(darkBlue),
+
+             navigationIcon = {
+                 IconButton(onClick = { /*TODO*/ })
+                 {
+                     Icon(Icons.Default.Menu, "Menu")
+
+                 }
+             },
+
+             actions = {
+                 IconButton(onClick = { onSearchClicked()})
+                 { Icon(imageVector = Icons.Filled.Search,
+                     contentDescription= "search",
+                     tint = Color.White)
+                 }
+
+                 Image(
+                     painterResource(id = R.drawable.notification), contentDescription = "No",
+                     modifier= Modifier.size(40.dp)
+                         .clickable { }
+                         .absolutePadding( bottom= 5.dp),
+                     colorFilter = ColorFilter.tint(color= Color.White),
+                     alignment= Alignment.CenterEnd
+                 )
+
+                       },
+
+             )
+
+         }
+     )
+     {
                         var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
                         if (shouldShowOnboarding) {
                             OnboardingScreen( onContinueClicked = {shouldShowOnboarding = false} )
