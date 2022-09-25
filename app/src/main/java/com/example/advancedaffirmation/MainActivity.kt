@@ -69,7 +69,7 @@
                 @Composable
                 fun OnboardingScreen( onContinueClicked: () -> Unit) {
                     Surface(
-                        color = beautyPink
+                        color = Color.White
                     ) {
 
                         Column(
@@ -79,14 +79,15 @@
                         )
                         {
                             val fontFamily = FontFamily(
-                                Font(R.font.brittanysignature),
+                                Font(R.font.dk_lemon_yellow_sun),
                             )
 
                             Text(
                                 "Just a constant reminder",
                                 fontSize = 30.sp,
                                 fontFamily = fontFamily,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color= (beautyPink)
                             )
                         }
                         Column(
@@ -177,7 +178,8 @@
                 fun Affirmation(
                     names: List<String> = listOf(
                         "An Inspiration", "Loved", "Treasured", "Smart", "A VIP",
-                        "The best", "Strong", "Special", "Good looking", "Amazing"
+                        "The best", "Strong", "Special", "Good looking", "Amazing", "An awesome human",
+                    "Cool"
                     ),
                 ) {
 
@@ -192,17 +194,17 @@
                 @Composable
                 fun Greeting(name: String) {
                     var expanded by remember { mutableStateOf(false) }
-                    val extraPadding by animateDpAsState (if (expanded) 30.dp else 0.dp)
+                    val extraPadding by animateDpAsState (if (expanded) 25.dp else 0.dp)
 
                     Surface(
                         color = beautyPink,
-                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 20.dp),
+                        modifier = Modifier.padding(horizontal = 5.dp, vertical =10.dp),
                         shape = RoundedCornerShape(20.dp)
                     ) {
 
                         Row(
                             modifier = Modifier
-                                .padding(20.dp)
+                                .padding(15.dp)
                                 .animateContentSize(
                                     animationSpec = spring(
                                         dampingRatio = Spring.DampingRatioMediumBouncy,
@@ -215,10 +217,11 @@
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(bottom = extraPadding)
+                                    .size(45.dp)
                             )
                             {
-                                Text(text = "You are,")
-                                Text(text = name, fontFamily = ff, fontSize = 30.sp)
+                                Text(text = "You are,", fontSize= 15.sp)
+                                Text(text = name, fontFamily = ff, fontSize = 20.sp)
                             }
                             IconButton(onClick = { expanded = !expanded })
                             {
